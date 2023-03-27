@@ -80,7 +80,7 @@ with st.expander(f"선택 지역: {len(selected_sidos)}개, 선택 카테고리:
 
     fig1.update_traces(marker_line_width=0.5, opacity=1)
 
-    fig1.update_xaxes(title_text='지역 이름)')
+    fig1.update_xaxes(title_text='지역명')
     fig1.update_yaxes(title_text='물건 수')
 
     fig1.update_layout(legend_orientation="h",
@@ -110,7 +110,7 @@ with st.expander(f"선택 지역: {len(selected_sidos)}개, 선택 카테고리:
 
     fig1.update_traces(marker_line_width=0.5, opacity=1)
 
-    fig1.update_xaxes(title_text='지역 이름)')
+    fig1.update_xaxes(title_text='지역명')
     fig1.update_yaxes(title_text='물건 수')
 
     fig1.update_layout(legend_orientation="h",

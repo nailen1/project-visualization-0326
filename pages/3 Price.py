@@ -78,4 +78,4 @@ with st.expander(f"{selected_sido} 기준 {selected_key} {convertPrice(price_min
         title_text=f'가격범위: 최소 {list_price_range[0]}원 ~ 최대 {list_price_range[-1]}원')
     fig.update_yaxes(title_text='물건 수')
 
-    st.plotly_chart(fig, theme=None, use_container_width=True)
+    st.plotly_chart(fig, theme='streamlit', use_container_width=True)

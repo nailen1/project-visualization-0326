@@ -38,12 +38,24 @@ fig1 = go.Figure()
 
 fig1.add_trace(go.Bar(name="전체", x=list_sido, y=means_sido))
 
-fig1.add_hline(y=means_sido[0], line_width=1,
-               line_color="gray",
-               annotation_text="전국 평균",  # 주석
+fig1.add_hline(y=means_sido[0], line_width=2,  # 수정사항 : 굵기를 1에서 2로 변경하였습니다.
+               line_color="darkgray",  # 수정사항 : 흰색으로 바꿔서 시인성을 높였습니다.
+               # 수정사항 : 전국평균의 수치를 넣었습니다.
+               annotation_text=f"전국 평균 {round(means_sido[0]/1e8, 2)}억",
                annotation_position="top right",
-               annotation_font_size=10)
+               annotation_font_size=12)  # 수정의견 : annotation_font = dict()를 통해 사이즈뿐만 아니라 '전국평균' 폰트의 굵기를 변경하려 했으나 오류가 발생하였습니다.
 fig1.update_traces(marker_line_width=0.5, opacity=1)
+
+# 수정사항 시작
+min_val = 0
+max_val = 8 * 1e8
+tick_interval = 1 * 1e8
+
+tickvals = list(range(int(min_val), int(max_val)+1, int(tick_interval)))
+ticktext = [f"{round(val/1e8, 1)}" for val in tickvals]
+
+fig1.update_yaxes(tickvals=tickvals, ticktext=ticktext, title="단위: 억원")
+# 수정사항 끝
 
 
 with st.expander(f"선택 카테고리: {selected_cat}", expanded=True):
@@ -70,13 +82,24 @@ fig2 = go.Figure()
 
 fig2.add_trace(go.Bar(name="전체", x=list_cat, y=means_cat))
 
-fig2.add_hline(y=means_cat[0], line_width=1,
-               line_color="gray",
-               annotation_text="전국 평균",  # 주석
+fig2.add_hline(y=means_cat[0], line_width=2,  # 수정사항 : fig1과 동일
+               line_color="darkgray",  # 수정사항 : fig1과 동일
+               # 수정사항 : fig1과 동일
+               annotation_text=f"전국 평균 {round(means_cat[0]/1e8, 2)}억",
                annotation_position="top right",
-               annotation_font_size=10)
+               annotation_font_size=12)
 fig2.update_traces(marker_line_width=0.5, opacity=1)
 
+# 수정사항 시작
+min_val = 0
+max_val = 15 * 1e8
+tick_interval = 2 * 1e8
+
+tickvals = list(range(int(min_val), int(max_val)+1, int(tick_interval)))
+ticktext = [f"{round(val/1e8, 1)}" for val in tickvals]
+
+fig2.update_yaxes(tickvals=tickvals, ticktext=ticktext, title="단위: 억원")
+# 수정사항 끝
 
 with st.expander(f"선택 지역: {selected_sido}", expanded=True):
     st.plotly_chart(fig2, theme='streamlit', use_container_width=True)

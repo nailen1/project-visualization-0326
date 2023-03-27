@@ -43,6 +43,19 @@ df_1 = pd.DataFrame(
 fig1 = go.Figure()
 fig1.add_trace(go.Bar(name="전체", x=df_1['sido'], y=df_1['price_py']))
 
+# 수정사항 시작
+min_val = 0
+max_val = 2 * 1e6
+tick_interval = 2 * 1e5
+
+tickvals = list(range(int(min_val), int(max_val)+1, int(tick_interval)))
+ticktext = [f"{round(val/1e6, 2)}" for val in tickvals]
+
+# y축 타이틀로 단위 표시
+fig1.update_yaxes(tickvals=tickvals, ticktext=ticktext, title="단위: 백만원")
+# 수정사항 끝
+
+
 with st.expander(f"선택 카테고리: {selected_cat}", expanded=True):
     st.plotly_chart(fig1, theme='streamlit', use_container_width=True)
 
@@ -73,6 +86,18 @@ df_2 = pd.DataFrame(
 
 fig2 = go.Figure()
 fig2.add_trace(go.Bar(name="전체", x=df_2['cat'], y=df_2['price_py']))
+
+# 수정사항 시작
+min_val = 0
+max_val = 5 * 1e6
+tick_interval = 5 * 1e5
+
+tickvals = list(range(int(min_val), int(max_val)+1, int(tick_interval)))
+ticktext = [f"{round(val/1e6, 2)}" for val in tickvals]
+
+# y축 타이틀로 단위 표시
+fig2.update_yaxes(tickvals=tickvals, ticktext=ticktext, title="단위: 백만원")
+# 수정사항 끝
 
 with st.expander(f"선택 카테고리: {selected_cat}", expanded=True):
     st.plotly_chart(fig2, theme='streamlit', use_container_width=True)
