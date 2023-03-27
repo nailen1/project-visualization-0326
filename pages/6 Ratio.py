@@ -3,13 +3,12 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 
-st.subheader('물건 종류별 비율 살펴보기')
+st.title('물건 종류별 비율 살펴보기')
 
 df = pd.read_csv('./database/auction-items-nonan.csv')
 
 list_sido = ['전체 지역'] + df['address_sido'].unique().tolist()
 list_cat = ['모든 종류'] + df['category'].unique().tolist()
-
 
 tab_a, tab_b = st.tabs(['전체 지역 비교', '개별 지역'])
 
