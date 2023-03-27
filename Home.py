@@ -352,7 +352,9 @@ selected_category = st.selectbox('물건 종류 선택', list_category)
 selected_sido = st.selectbox('지역(시도) 선택', list(region_options.keys()))
 
 with st.expander(f"선택 물건: {selected_category}, 선택 지역: {selected_sido}", expanded=True):
-    def create_map_figure(selected_df, geojson, region_cat, key_col, geo_key_col, city_info=None, selected_sido=None):
+    ######### 수정부분 ##########
+
+    def create_map_figure(selected_df, geojson, region_cat, key_col, geo_key_col, selected_sido, city_info=None):
         grouped_df = selected_df.groupby(region_cat).agg(
             {'count': 'count', key_col: 'first'}).reset_index()
         grouped_df[key_col] = grouped_df[key_col].astype(int)
@@ -364,12 +366,22 @@ with st.expander(f"선택 물건: {selected_category}, 선택 지역: {selected_
         # geo_df['count'] = geo_df['count'].fillna(0)
         # geojson["features"] = geo_df.to_dict("records")
 
-        latitude = 35.6
-        longitude = 127.5
+        if selected_sido == '전국':
+            latitude = 36.5
+            longitude = 127.5
+            zoom_start = 6.5
+        elif selected_sido[-1] == '도':
+            latitude = city_info[selected_sido]['center'][0]
+            longitude = city_info[selected_sido]['center'][1]
+            zoom_start = 8
+        else:
+            latitude = city_info[selected_sido]['center'][0]
+            longitude = city_info[selected_sido]['center'][1]
+            zoom_start = 10
 
         m = folium.Map(location=[latitude, longitude],
-                       zoom_start=6.5,
-                       width=700, height=700,
+                       zoom_start=zoom_start,
+                       width=700, height=510,
                        tiles="cartodbdark_matter")
 
         folium.GeoJson(
@@ -386,6 +398,14 @@ with st.expander(f"선택 물건: {selected_category}, 선택 지역: {selected_
                      line_opacity=1.5,
                      key_on=f"properties.{geo_key_col}",
                      legend_name='물건수',
+                     legend={
+                         'font_size': 20,
+                         'font_color': 'white',
+                         'title_font_size': 20,
+                         'title_font_color': 'white',
+                         'title_color': 'white',
+                         'border_color': 'white',
+                         'border_width': 2},
                      legend_font_color='white',
                      highlight=True)
 
@@ -396,23 +416,29 @@ with st.expander(f"선택 물건: {selected_category}, 선택 지역: {selected_
         if selected_sido == list(region_options.keys())[0]:
             selected_df = merged_df_copy[merged_df_copy['category']
                                          == selected_category]
-            create_map_figure(selected_df, json_korea_sido,
-                              'address_sido', 'CTPRVN_CD', 'CTPRVN_CD')
+            create_map_figure(selected_df, json_korea_sido, 'address_sido',
+                              'CTPRVN_CD', 'CTPRVN_CD', selected_sido, city_info)
         else:  # 카테고리 전체X, 지역 특정광역이라면
             selected_df = merged_df_copy[merged_df_copy['category']
                                          == selected_category]
             selected_df = selected_df[selected_df['address_gugun'].isin(
                 region_options[selected_sido])]
+            selected_df = selected_df[selected_df['address_sido']
+                                      == selected_sido]
             create_map_figure(selected_df, json_korea_sgg, 'address_gugun',
-                              'SIG_CD', 'SIG_CD', city_info, selected_sido)
+                              'SIG_CD', 'SIG_CD', selected_sido, city_info)
     else:
         # 카테고리 전체O, 지역 전국이라면
         if selected_sido == list(region_options.keys())[0]:
             selected_df = merged_df_copy
-            create_map_figure(selected_df, json_korea_sido,
-                              'address_sido', 'CTPRVN_CD', 'CTPRVN_CD')
+            create_map_figure(selected_df, json_korea_sido, 'address_sido',
+                              'CTPRVN_CD', 'CTPRVN_CD', selected_sido, city_info)
         else:  # 카테고리 전체O, 지역 특정광역이라면
             selected_df = merged_df_copy[merged_df_copy['address_gugun'].isin(
                 region_options[selected_sido])]
+            selected_df = selected_df[selected_df['address_sido']
+                                      == selected_sido]
             create_map_figure(selected_df, json_korea_sgg, 'address_gugun',
-                              'SIG_CD', 'SIG_CD', city_info, selected_sido)
+                              'SIG_CD', 'SIG_CD', selected_sido, city_info)
+
+    ######### 수정부분 ##########
