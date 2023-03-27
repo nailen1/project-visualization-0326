@@ -20,7 +20,7 @@ with colA:
     selected_sido = st.selectbox('지역(시도) 선택', list_sido)
 
 with colB:
-    price_start = 1000000
+    price_start = 0
     price_end = 1000000000
     price_step = 1000000
     price_range = st.slider("가격 범위 선택", 0, 1000000000,
@@ -59,10 +59,6 @@ with st.expander(f"{selected_sido} 기준 {selected_key} {convertPrice(price_min
 
     if selected_sido != '전체 지역':
         df_price = df_price[df_price['address_sido'] == selected_sido]
-
-    # 가격 범위의 시작과 끝
-
-    # 각 구간의 시작 가격을 계산해서 리스트에 추가
 
     df_bin_estimate = df_price.groupby(
         pd.cut(df_price[dict_var[selected_key]], bins=20)).size().reset_index(name='number')

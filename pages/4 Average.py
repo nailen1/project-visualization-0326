@@ -46,15 +46,8 @@ fig1.add_hline(y=means_sido[0], line_width=2,  # 수정사항 : 굵기를 1에�
                annotation_font_size=12)  # 수정의견 : annotation_font = dict()를 통해 사이즈뿐만 아니라 '전국평균' 폰트의 굵기를 변경하려 했으나 오류가 발생하였습니다.
 fig1.update_traces(marker_line_width=0.5, opacity=1)
 
-# 수정사항 시작
-min_val = 0
-max_val = 8 * 1e8
-tick_interval = 1 * 1e8
 
-tickvals = list(range(int(min_val), int(max_val)+1, int(tick_interval)))
-ticktext = [f"{round(val/1e8, 1)}" for val in tickvals]
-
-fig1.update_yaxes(tickvals=tickvals, ticktext=ticktext, title="단위: 억원")
+fig1.update_yaxes(title="단위: 원")
 # 수정사항 끝
 
 
@@ -68,15 +61,15 @@ selected_sido = st.selectbox('지역(시도) 선택', list_sido)
 
 means_cat = []
 df_sido = df[df['address_sido'] == selected_sido]
-if selected_cat == '모든 종류':
+if selected_sido == '전체 지역':
     df_sido = df
 for cat in list_cat:
     if cat == '모든 종류':
-        mean = df[dict_var[selected_key]].mean()
+        mean1 = df[dict_var[selected_key]].mean()
     else:
-        mean = df_sido[df_sido['category'] ==
-                       cat][dict_var[selected_key]].mean()
-    means_cat.append(mean)
+        mean1 = df_sido[df_sido['category'] ==
+                        cat][dict_var[selected_key]].mean()
+    means_cat.append(mean1)
 
 fig2 = go.Figure()
 
@@ -90,15 +83,8 @@ fig2.add_hline(y=means_cat[0], line_width=2,  # 수정사항 : fig1과 동일
                annotation_font_size=12)
 fig2.update_traces(marker_line_width=0.5, opacity=1)
 
-# 수정사항 시작
-min_val = 0
-max_val = 15 * 1e8
-tick_interval = 2 * 1e8
 
-tickvals = list(range(int(min_val), int(max_val)+1, int(tick_interval)))
-ticktext = [f"{round(val/1e8, 1)}" for val in tickvals]
-
-fig2.update_yaxes(tickvals=tickvals, ticktext=ticktext, title="단위: 억원")
+fig2.update_yaxes(title="단위: 원")
 # 수정사항 끝
 
 with st.expander(f"선택 지역: {selected_sido}", expanded=True):
