@@ -58,13 +58,13 @@ with st.expander("요약 정보", expanded=True):
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.metric('전체 경매 물건 수', num_of_items+'개', "-3%",
+        st.metric('전체 경매 물건 수', num_of_items+'개', "-0%",
                   delta_color="normal", help=None, label_visibility="visible")
     with col2:
-        st.metric('경매 물건 감정가 총합', total_estimate+'원', "-8%",
+        st.metric('경매 물건 감정가 총합', total_estimate+'원', "-0%",
                   delta_color="normal", help=None, label_visibility="visible")
     with col3:
-        st.metric('평균 물건 입찰가 총합', total_bidding+'원', delta='-5%',
+        st.metric('평균 물건 입찰가 총합', total_bidding+'원', delta='-0%',
                   delta_color="normal", help=None, label_visibility="visible")
     with col4:
         st.metric('평균 유찰 횟수', mean_of_miss+'회', delta='0',
@@ -103,15 +103,16 @@ with st.expander(f"트리맵: {selected_key}", expanded=True):
     fig_a = px.treemap(df_p, path=['address_sido', 'category'], color=dict_var[selected_key],
                        color_continuous_scale='Blues',
                        )
-    fig_a.update_layout(margin=dict(t=50, l=25, r=25, b=25))
-
+    fig_a.update_layout(margin=dict(t=50, l=10, r=10, b=25))
+    fig_a.update_layout(legend_title_text=selected_key)
+    fig_a.update_layout(legend_orientation='h')
     # 차트 불러오기
     tab_a.plotly_chart(fig_a, theme=None, use_container_width=True)
 
     fig_b = px.treemap(df_p, path=['category', 'address_sido'], color=dict_var[selected_key],
                        color_continuous_scale='Blues',
                        )
-    fig_b.update_layout(margin=dict(t=50, l=25, r=25, b=25))
+    fig_b.update_layout(margin=dict(t=50, l=10, r=10, b=25))
 
     # 차트 불러오기
     tab_b.plotly_chart(fig_b, theme=None, use_container_width=True)
@@ -123,7 +124,7 @@ st.subheader(
 
 with st.expander(f"지역-물건 종류 교차 정보", expanded=True):
 
-    tab_c, tab_d, tab_e = st.tabs(["물건 수 기준", '감정가 기준', "경매 시작가 기준"])
+    tab_c, tab_d, tab_e = st.tabs(["물건 수 기준", '감정가 기준', "최저입찰가 기준"])
 
     df_crosstab1 = pd.crosstab(df['category'], df['address_sido'])
 
@@ -133,6 +134,9 @@ with st.expander(f"지역-물건 종류 교차 정보", expanded=True):
                          x=df.address_sido.unique(),
                          y=df.category.unique()
                          )
+
+    heatmap1.update_xaxes(title=None)
+    heatmap1.update_yaxes(title=None)
 
     tab_c.plotly_chart(heatmap1, theme=None, use_container_width=True)
 
@@ -147,6 +151,9 @@ with st.expander(f"지역-물건 종류 교차 정보", expanded=True):
                          y=df_crosstab4.index
                          )
 
+    heatmap4.update_xaxes(title=None)
+    heatmap4.update_yaxes(title=None)
+
     tab_d.plotly_chart(heatmap4, theme=None, use_container_width=True)
 
     df_crosstab3 = pd.crosstab(
@@ -154,10 +161,13 @@ with st.expander(f"지역-물건 종류 교차 정보", expanded=True):
 
     heatmap3 = px.imshow(df_crosstab3,
                          labels=dict(x="지역(시도)", y="물건 종류",
-                                     color="경매 시작가 평균"),
+                                     color="최저입찰가 평균"),
                          color_continuous_scale='Blues',
                          x=df_crosstab3.columns,
                          y=df_crosstab3.index
                          )
+
+    heatmap3.update_xaxes(title=None)
+    heatmap3.update_yaxes(title=None)
 
     tab_e.plotly_chart(heatmap3, theme=None, use_container_width=True)
