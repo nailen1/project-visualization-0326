@@ -26,7 +26,8 @@ df_sido = df
 if selected_sido != '전체 지역':
     df_sido = df[df['address_sido'] == selected_sido]
 
-df_sorted_sido = df.sort_values(by=dict_var[selected_key], ascending=False)
+df_sorted_sido = df_sido.sort_values(
+    by=dict_var[selected_key], ascending=False)
 fig_a = px.bar(df_sorted_sido, y="category", x=dict_var[selected_key], color="category",
                color_discrete_sequence=px.colors.qualitative.G10)
 fig_a.update_xaxes(title="단위: 원")
